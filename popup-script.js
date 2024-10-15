@@ -256,3 +256,38 @@ class PopupHandler {
     };
 }
 const popup = new PopupHandler();
+
+
+// Show a Popup
+const submitBtn = document.getElementById('submit_btn');
+
+const handleCallbackFunction = () => {
+    const responseMsg = 'Action completed successfully!';
+    const responseStatus = 'SUCCESS';
+
+    popup.showPopup(
+        popupConfig = {
+            message: responseMsg,
+            status: responseStatus,
+        });
+};
+
+
+submitBtn.onclick = function (e) {
+    e.preventDefault();
+
+    const responseMsg = 'Do you want to confirm this action?';
+    const responseStatus = 'confirm';
+    // const responseStatus = 'warning';
+    // const responseStatus = 'success';
+    // const responseStatus = 'failed';
+
+    popup.showPopup(
+        popupConfig = {
+            message: responseMsg,
+            status: responseStatus,
+            callback: handleCallbackFunction,
+            // actionButtonText: 'Proceed',
+        }
+    );
+};
