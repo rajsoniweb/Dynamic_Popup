@@ -15,14 +15,14 @@ git clone https://github.com/rajsoniweb/popup-handler.git
 
 Then, import the script into your HTML file:
 
-<script src="path/to/popup-script.js"></script>
+`<script src="path/to/popup-script.js"></script>`
 
 
 ## Usage
 ## Initialize PopupHandler
 Create an instance of the PopupHandler class:
 
-const popup = new PopupHandler();
+`const popup = new PopupHandler();`
 
 
 ## Show a Popup
@@ -38,19 +38,22 @@ popup.showPopup({
 });
 
 ## Popup Status Types
-* confirm: Displays a confirmation popup.
-* success: Displays a success message with an OK button.
-* failed:  Displays a failure message.
-* warning: Displays a warning message.
+* `confirm`: Displays a confirmation popup.
+* `success`: Displays a success message with an OK button.
+* `failed`:  Displays a failure message.
+* `warning`: Displays a warning message.
 
 ## Configuration Options
-Here are the available configuration options for the showPopup method:
 
-## Option	            Type    	    Description
-message 	            string	      The message text to display in the popup.
-status	              string	      The popup type. Available options: confirm, success, failed, warning.
-callback	            function	    Optional. A function to execute when the confirm button is clicked.
-actionButtonText	    string	      Optional. Custom text for the action/confirm button.
+Here are the available configuration options for the `showPopup` method:
+
+| Option            | Type       | Description                                                  |
+|-------------------|------------|--------------------------------------------------------------|
+| `message`         | `string`   | The message text to display in the popup.                    |
+| `status`          | `string`   | The popup type. Available options: `confirm`, `success`, `failed`, `warning`. |
+| `callback`        | `function` | Optional. A function to execute when the confirm button is clicked. |
+| `actionButtonText`| `string`   | Optional. Custom text for the action/confirm button.          |
+
 
 ## Example
 popup.showPopup({
