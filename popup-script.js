@@ -8,12 +8,14 @@ class PopupHandler {
 
     svgIcons = {
         confirm: `
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#fbbe04" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm9.008-3.018a1.502 1.502 0 0 1 2.522 1.159v.024a1.44 1.44 0 0 1-1.493 1.418 1 1 0 0 0-1.037.999V14a1 1 0 1 0 2 0v-.539a3.44 3.44 0 0 0 2.529-3.256 3.502 3.502 0 0 0-7-.255 1 1 0 0 0 2 .076c.014-.398.187-.774.48-1.044Zm.982 7.026a1 1 0 1 0 0 2H12a1 1 0 1 0 0-2h-.01Z" clip-rule="evenodd"/>
+        <svg width="90" height="68" style="margin: -18px 0px -5px -25px;" xmlns="http://www.w3.org/2000/svg">
+                <rect width="40" height="40" x="25" y="25" fill="#ffc107" transform="rotate(45 60 60)"></rect>
+                <text x="60" y="42" font-size="27" font-weight="bold" text-anchor="middle" dominant-baseline="middle" fill="white">?</text>
             </svg>`,
         success: `
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#07a545" viewBox="0 0 24 24">
-                <path fill-rule="evenodd" d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm13.707-1.293a1 1 0 0 0-1.414-1.414L11 12.586l-1.793-1.793a1 1 0 0 0-1.414 1.414l2.5 2.5a1 1 0 0 0 1.414 0l4-4Z" clip-rule="evenodd"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10" fill="#07a545" stroke="#07a545" stroke-width="2"/>
+                <path d="M8 12.5l3 3 5-6" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>`,
         failed: `
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#d40404" viewBox="0 0 24 24">
@@ -21,7 +23,7 @@ class PopupHandler {
             </svg>`,
         warning: `
             <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#ff9800" viewBox="0 0 24 24">
-                <path d="M12 2 L21 21 H3 Z" style="fill:#ff9800; stroke:#ff9800; stroke-width:4; stroke-linejoin:round;" />
+                <path d="M12 4 L21 21 H3 Z" style="fill:#ff9800; stroke:#ff9800; stroke-width:4; stroke-linejoin:round;" />
                 <circle cx="12" cy="18" r="1.3" fill="#fff" />
                 <rect x="11" y="7" width="2" height="8" fill="#fff" rx="2" />
             </svg>`
@@ -105,13 +107,13 @@ class PopupHandler {
         const modalHTML = `
             <div id="custom--popup" style="${modalStyle}">
                 <div id="modal--content" style="${modalContentStyle}">
-                    <div id="popup--header" style="padding: 2px;"></div>
+                    <div id="popup--header" style="padding: 2.3px; border-radius: 5px 5px 0 0"></div>
                     <div id="popup--content" style="${popupContentStyle}">
                         <div id="popup--icon">
                         </div>
                         <div id="text--container" style="${textContainerStyle}">
                             <h3 id="popup--status" style="${popupStatusStyle}"></h3>
-                            <span id="popup--msg" style="color: #6c757d;"></span>
+                            <span id="popup--msg" style="color: #535353;"></span>
                         </div>
                     </div>
                     <div id="footer--container" style="${footerStyle}">
@@ -194,7 +196,7 @@ class PopupHandler {
         const statusOptions = {
             confirm: {
                 iconSVG: this.svgIcons.confirm,
-                color: '#fbbe04',
+                color: '#ffc107',
                 actionText: actionButtonText || 'Confirm',
                 cancelButton: 'inline-block',
                 actionHandler: () => this.handleActionWithCallback(callback)
@@ -256,38 +258,3 @@ class PopupHandler {
     };
 }
 const popup = new PopupHandler();
-
-
-// Show a Popup
-const submitBtn = document.getElementById('submit_btn');
-
-const handleCallbackFunction = () => {
-    const responseMsg = 'Action completed successfully!';
-    const responseStatus = 'SUCCESS';
-
-    popup.showPopup(
-        popupConfig = {
-            message: responseMsg,
-            status: responseStatus,
-        });
-};
-
-
-submitBtn.onclick = function (e) {
-    e.preventDefault();
-
-    const responseMsg = 'Do you want to confirm this action?';
-    const responseStatus = 'confirm';
-    // const responseStatus = 'warning';
-    // const responseStatus = 'success';
-    // const responseStatus = 'failed';
-
-    popup.showPopup(
-        popupConfig = {
-            message: responseMsg,
-            status: responseStatus,
-            callback: handleCallbackFunction,
-            // actionButtonText: 'Proceed',
-        }
-    );
-};
