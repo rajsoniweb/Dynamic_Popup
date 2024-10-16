@@ -171,7 +171,7 @@ class PopupHandler {
      * Show a popup with a custom message, status, and optional callback for confirmation actions.
      * @param {Object} popupConfig - Configuration for displaying the popup.
      * @param {string} popupConfig.message - The message to display inside the popup.
-     * @param {string} popupConfig.status - The type or status of the popup (e.g., "confirm", "success", "failed", "warning", 'image').
+     * @param {string} popupConfig.status - The type or status of the popup (e.g., "confirm", "success", "failed", "warning", "error", 'image').
      * @param {function} [popupConfig.callback] - Optional callback function executed when the confirm button is clicked.
      * @param {string} [popupConfig.actionButtonText] - Optional text for the action/confirm button.
      * * @param {string} [popupConfig.imageUrl] - Optional URL for displaying an image in the popup (used for the "image" status).
@@ -235,6 +235,13 @@ class PopupHandler {
                 cancelButton: 'none',
                 actionHandler: () => this.handleActionWithCallback(callback)
             },
+            error: {
+                iconSVG: this.svgIcons.failed,
+                color: '#d40404',
+                actionText: actionButtonText || 'Ok',
+                cancelButton: 'none',
+                actionHandler: () => this.handleActionWithCallback(callback)
+            },
             warning: {
                 iconSVG: this.svgIcons.warning,
                 color: '#ff9800',
@@ -256,7 +263,7 @@ class PopupHandler {
 
     /**
      * Apply the styles and content to the popup elements based on the provided configuration.
-     * @param {string} status - The status to display in the popup (e.g., "confirm", "success", "failed", "warning", 'image').
+     * @param {string} status - The status to display in the popup (e.g., "confirm", "success", "failed", "warning", "error", 'image').
      * @param {string} message - The message to display in the popup.
      * @param {Object} config - The configuration object containing styles, icons, and button settings.
      */
@@ -286,15 +293,14 @@ class PopupHandler {
 }
 const popup = new PopupHandler();
 
-
-const submitBtn = _eleByid('submit_btn');
+// Execution popup
+const submitBtn = _eleById('submit_btn');
 
 const handleCallbackFunction = () => {
     const responseMsg = 'Action completed successfully!';
     const responseStatus = 'SUCCESS';
 
-    popup.showPopup(
-        popupConfig = {
+    popup.showPopup({
             message: responseMsg,
             status: responseStatus,
         });
@@ -309,8 +315,7 @@ submitBtn.onclick = function (e) {
     // const responseStatus = 'success';
     // const responseStatus = 'failed';
 
-    popup.showPopup(
-        popupConfig = {
+    popup.showPopup({
             message: responseMsg,
             status: responseStatus,
             callback: handleCallbackFunction,
