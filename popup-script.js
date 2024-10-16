@@ -1,9 +1,16 @@
-const eleById = document.getElementById.bind(document);
+const _eleByid = document.getElementById.bind(document);
 
 class PopupHandler {
     constructor() {
         // Create the basic structure of both popups
         this.createPopupStructure();
+
+        // Event listener for closing the popup when clicking outside
+        this.modal.addEventListener('click', (event) => {
+            if (event.target === this.modal) { // Check if the click is on the overlay
+                this.hidePopup(); // Hide the popup
+            }
+        });
     }
 
     svgIcons = {
@@ -72,8 +79,15 @@ class PopupHandler {
 
         const popupStatusStyle = `
             margin: 0;
-            font-size: 19px;
+            font-size: 20px;
             margin-bottom: 8px;
+            font-weight: 500;
+        `;
+
+        const popupMsgStyle = `
+            font-size: 15px;
+            font-weight: 400;
+            color: #8a8a8a;
         `;
 
         const buttonStyle = `
@@ -113,7 +127,7 @@ class PopupHandler {
                         </div>
                         <div id="text--container" style="${textContainerStyle}">
                             <h3 id="popup--status" style="${popupStatusStyle}"></h3>
-                            <span id="popup--msg" style="color: #535353;"></span>
+                            <span id="popup--msg" style="${popupMsgStyle}"></span>
                         </div>
                     </div>
                     <div id="footer--container" style="${footerStyle}">
@@ -128,15 +142,15 @@ class PopupHandler {
         document.body.insertAdjacentHTML('beforeend', modalHTML);
 
         // Store references to elements for later use
-        this.modal = eleById('custom--popup');
-        this.modalContent = eleById('modal--content');
-        this.icon = eleById('popup--icon');
-        this.iconText = eleById('iconText');
-        this.header = eleById('popup--header');
-        this.popupStatus = eleById('popup--status');
-        this.popupMsg = eleById('popup--msg');
-        this.cancelButton = eleById('cancel--button');
-        this.actionButton = eleById('action--button');
+        this.modal = _eleByid('custom--popup');
+        this.modalContent = _eleByid('modal--content');
+        this.icon = _eleByid('popup--icon');
+        this.iconText = _eleByid('iconText');
+        this.header = _eleByid('popup--header');
+        this.popupStatus = _eleByid('popup--status');
+        this.popupMsg = _eleByid('popup--msg');
+        this.cancelButton = _eleByid('cancel--button');
+        this.actionButton = _eleByid('action--button');
 
         // Event listeners for closing the popup
         this.cancelButton.onclick = () => this.hidePopup();
@@ -157,24 +171,29 @@ class PopupHandler {
      * Show a popup with a custom message, status, and optional callback for confirmation actions.
      * @param {Object} popupConfig - Configuration for displaying the popup.
      * @param {string} popupConfig.message - The message to display inside the popup.
-     * @param {string} popupConfig.status - The type or status of the popup (e.g., "confirm", "success", "failed", "warning").
+     * @param {string} popupConfig.status - The type or status of the popup (e.g., "confirm", "success", "failed", "warning", 'image').
      * @param {function} [popupConfig.callback] - Optional callback function executed when the confirm button is clicked.
      * @param {string} [popupConfig.actionButtonText] - Optional text for the action/confirm button.
+     * * @param {string} [popupConfig.imageUrl] - Optional URL for displaying an image in the popup (used for the "image" status).
      */
     showPopup(popupConfig) {
-        const { message, status, callback, actionButtonText } = popupConfig;
+        const { message, status, callback, actionButtonText, imageUrl } = popupConfig;
 
         // Ensure status is lowercase for consistency
         const lowerStatus = status.toLowerCase();
 
+        if (status === 'image' && !imageUrl) { 
+            console.error("Image URL not provided to showPopup");
+            return;
+        }
         // Configurations based on status type
-        const statusConfig = this.getStatusConfig(lowerStatus, actionButtonText, callback);
+        const statusConfig = this.getStatusConfig(lowerStatus, actionButtonText, callback, imageUrl);
 
         if (!statusConfig) {
             console.error("Invalid status provided to showPopup");
             return;
         }
-
+        
         // Apply styles and content to popup elements
         this.applyPopupStylesAndContent(lowerStatus, message, statusConfig);
 
@@ -191,8 +210,9 @@ class PopupHandler {
      * @param {string} [actionButtonText] - Optional custom text for the action button.
      * @param {function} [callback] - Optional callback function for confirmation actions.
      * @returns {Object|null} The status configuration object or null if the status is invalid.
+     * @param {string} [imageUrl] - Optional URL for displaying an image in the popup (used for the "image" status).
      */
-    getStatusConfig(status, actionButtonText, callback) {
+    getStatusConfig(status, actionButtonText, callback, imageUrl) {
         const statusOptions = {
             confirm: {
                 iconSVG: this.svgIcons.confirm,
@@ -221,6 +241,13 @@ class PopupHandler {
                 actionText: actionButtonText || 'Ok',
                 cancelButton: 'none',
                 actionHandler: () => this.handleActionWithCallback(callback)
+            },
+            image: {
+                iconSVG: `<img src="${imageUrl}" style="width: 100%;" alt="popup image">`,
+                color: '#fff',
+                actionText: actionButtonText || 'Close',
+                cancelButton: 'none',
+                actionHandler: () => this.hidePopup()
             }
         };
 
@@ -229,14 +256,14 @@ class PopupHandler {
 
     /**
      * Apply the styles and content to the popup elements based on the provided configuration.
-     * @param {string} status - The status to display in the popup (e.g., "confirm", "success", "failed", "warning").
+     * @param {string} status - The status to display in the popup (e.g., "confirm", "success", "failed", "warning", 'image').
      * @param {string} message - The message to display in the popup.
      * @param {Object} config - The configuration object containing styles, icons, and button settings.
      */
     applyPopupStylesAndContent(status, message, config) {
         this.modal.style.display = 'flex';
         this.header.style.background = config.color;
-        this.popupStatus.textContent = status === 'confirm' ? 'Are You Sure?' : status.toUpperCase();
+        this.popupStatus.textContent = status === 'confirm' ? 'Are You Sure?' : status === 'image' ? ''  : status.toUpperCase();
         this.popupMsg.textContent = message;
         this.icon.innerHTML = config.iconSVG;
         this.popupStatus.style.color = config.color;
